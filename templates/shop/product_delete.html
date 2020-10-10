@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ product.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="form-login" style="width: 50%; margin-left: 250px">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <p>Do you want to delete "{{ product.title }}" ?</p>
+            <br>
+            <input type="submit" value="Delete" class="btn btn-danger">
+        </form>
+    </div>
+    </div>
+{% endblock %}

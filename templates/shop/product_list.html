@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}
+    Product List
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if products %}
+            <div class="row">
+                {% if user.is_authenticated %}
+                    {% for product in products %}
+                        <div class="card mr-2 mt-2" style="width: 18rem;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Title :{{ product.title }}</h5>
+                                <h5 class="card-text">Price: {{ product.price|intcomma }}</h5>
+                                <a href="{% url 'shop:product-detail' product.id %}" class="btn btn-primary">See Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                    <h1 class="text-center display-4 ml-5">Please Login To See Product List</h1>
+                {% endif %}
+
+            </div>
+        {% else %}
+            <h1>Have no product</h1>
+        {% endif %}
+    </div>
+{% endblock %}

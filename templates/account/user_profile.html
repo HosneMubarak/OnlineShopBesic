@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block title %}
+    User Profile
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+       {% if request.user.is_staff %}
+        <h1 class="bg-danger text-white text-center">Welcome To Admin Profile</h1>
+       {% endif %}
+               {% if request.user.is_employee %}
+        <h1 class="bg-success text-white text-center">Welcome To Employee Profile</h1>
+       {% endif %}
+    </div>
+    <div class="container mt-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Product Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Last Updated</th>
+                {% if request.user.is_employee or request.user.is_staff %}
+                    <th scope="col">Action</th>
+                {% endif %}
+                {% if request.user.is_staff %}
+                    <th scope="col">Delete</th>
+                {% endif %}
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for products in all_product %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ products.title }}</td>
+                    <td>{{ products.category }}</td>
+                    <td>{{ products.price|intcomma }} Tk</td>
+                    <td>{{ products.updated_at }}</td>
+                    {% if request.user.is_employee or request.user.is_staff %}
+                        <td><a href="{% url 'shop:product-update' products.id %}">Update</a>
+                        </td>
+                    {% endif %}
+                    {% if request.user.is_staff %}
+                        <td><a href="{% url 'shop:product-delete' products.id %}">Delete</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}
+    {{ product.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        {% if request.user.is_authenticated %}
+            <div class="card-body text-center">
+                <h5 class="card-title">Title :{{ product.title }}</h5>
+                <h5 class="card-text">Price: {{ product.price|intcomma }}</h5>
+                <h5 class="card-text">Price: {{ product.description }}</h5>
+                <br>
+                {% if request.user.is_employee or request.user.is_staff  %}
+                <h5><a class="card-text btn btn-success text-white" href="{% url 'shop:product-update' product.id %}">Update</a></h5>
+                {% endif %}
+                <br>
+            {% if request.user.is_staff  %}
+                <h5><a  class="card-text btn btn-danger text-white" href="{% url 'shop:product-delete' product.id %}">Delete</a></h5>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
