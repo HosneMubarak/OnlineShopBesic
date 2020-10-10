@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from shop.models import Product
 
 
+
 def user_profile(request):
     all_product = Product.objects.all()
     context = {
@@ -34,7 +35,6 @@ class EmployeeRegistrationView(CreateView):
     form_class = EmployeeSignupForm
     template_name = 'account/employee_registration.html'
 
-
     def form_valid(self, form, backend='django.contrib.auth.backends.ModelBackend'):
         user = form.save()
         login(self.request, user)
@@ -42,18 +42,22 @@ class EmployeeRegistrationView(CreateView):
 
 
 def login_view(request):
+    form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(request, username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('shop:product-list')
-    else:
-        form = LoginForm()
+            if '@' in cd['username']:
+                username = CustomUser.objects.get(email=cd['username']).username
+            else:
+                username = cd['username']
 
+            user = authenticate(username=username,
+                                password=cd['password'])
+
+            if user is not None and user.is_active:
+                login(request, user)
+                return redirect('shop:product-list')
     return render(request, 'account/login.html', {'form': form})
 
 

@@ -55,5 +55,5 @@ class EmployeeSignupForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
+    username = forms.CharField(label='Email Address')
     password = forms.CharField(widget=forms.PasswordInput)
